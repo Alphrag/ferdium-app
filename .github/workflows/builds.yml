@@ -162,7 +162,7 @@ jobs:
       - name: Run linter and tests
         run: npm run lint && npm run test
       - name: Build Ferdium without publish for any branch not 'nightly' and not 'release'
-        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' }}
+        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != 'Alphrag-local-release' }}
         run: npm run build -- --publish never
         shell: bash
       - name: Build Ferdium with publish for 'nightly' branch
@@ -343,7 +343,7 @@ jobs:
         run: npm run lint && npm run test
         shell: bash
       - name: Build Ferdium without publish for any branch not 'nightly' and not 'release'
-        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' }}
+        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != 'Alphrag-local-release' }}
         run: npm run build -- --publish never
         shell: bash
       - name: Build Ferdium with publish for 'nightly' branch
