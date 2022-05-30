@@ -58,7 +58,7 @@ win:
       arch: [x64, ia32]
     - target: portable
       arch: [x64, ia32]
-  publisherName: "Ferdium Contributors"
+  publisherName: ["Ferdium Contributors", "Ambroise Grau"]
 
 linux:
   icon: ./build-helpers/images/icons
