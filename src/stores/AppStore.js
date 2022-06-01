@@ -183,7 +183,7 @@ export default class AppStore extends Store {
         }
 
         if (data.error) {
-          if (data.error.message && data.error.message.startsWith('404')) {
+          if (data.error.message && data.error.message.contains('please ensure a production release exists')) {
             this.updateStatus = this.updateStatusTypes.NOT_AVAILABLE;
             console.warn('Updater warning: there seems to be unpublished pre-release(s) available on GitHub', data.error);
           } else {
