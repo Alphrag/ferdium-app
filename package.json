@@ -3,7 +3,7 @@
   "productName": "Ferdium-Alphrag",
   "desktopName": "ferdium-alphrag.desktop",
   "appId": "org.alphrag.ferdium-app",
-  "version": "6.0.0-nightly-alphrag.48",
+  "version": "6.0.0-nightly-alphrag.50",
   "description": "Messaging app for WhatsApp, Slack, Telegram, HipChat, Hangouts and many many more.",
   "author": "Ferdium Contributors <hello@ferdium.org> (https://ferdium.org/)",
   "license": "Apache-2.0",
