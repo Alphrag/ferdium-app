@@ -1,6 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import { isMac, isWindows } from '../../environment';
+import { appEvents } from '../..';
 
 const debug = require('../../preload-safe-debug')('Ferdium:ipcApi:autoUpdate');
 
@@ -25,12 +26,13 @@ export default (params: { mainWindow: BrowserWindow; settings: any }) => {
           } else if (args.action === 'install') {
             debug('installing update');
 
+            appEvents.emit('install-update');
+
             const openedWindows = BrowserWindow.getAllWindows();
             for (const window of openedWindows)  window.close();
 
             autoUpdater.quitAndInstall();
             // TODO: based on https://github.com/electron-userland/electron-builder/issues/6058#issuecomment-1130344017 (not yet tested since we don't have signed builds yet for macos)
-            // app.exit();
           }
         } catch (error) {
           event.sender.send('autoUpdate', { error });
