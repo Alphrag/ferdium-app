@@ -1,4 +1,4 @@
-import { app, ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import { isMac, isWindows } from '../../environment';
 
@@ -26,7 +26,7 @@ export default (params: { mainWindow: BrowserWindow; settings: any }) => {
             debug('installing update');
 
             const openedWindows = BrowserWindow.getAllWindows();
-            openedWindows.forEach(window => window.close());
+            for (const window of openedWindows)  window.close();
 
             autoUpdater.quitAndInstall();
             // TODO: based on https://github.com/electron-userland/electron-builder/issues/6058#issuecomment-1130344017 (not yet tested since we don't have signed builds yet for macos)
