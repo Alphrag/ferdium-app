@@ -14,23 +14,27 @@ name: Builds
 
 on:
   # Push to any tracked branches
-  push:
-    branches: [develop, release, nightly]
-  # PRs only on develop branch
+  # CHANGE: Remove automatic builds when pushing
+  # push:
+  #  branches: [develop, release, nightly]
+  # CHANGE: PRs only on personal branch
   pull_request:
-    branches: [develop]
+    branches: [Alphrag-local-release]
   # Manual trigger from the UI
   workflow_dispatch:
     inputs:
       message:
         description: 'Message for build'
         required: true
-  schedule:
-    - cron: '0 0 * * *' # every night at 12 am
+  # CHANGE: disable automated build
+  # schedule:
+  #  - cron: '0 0 * * *' # every night at 12 am
 
 env:
   USE_HARD_LINKS: false
   # DEBUG: electron-builder
+  # CHANGE: Set name to use for personal branch
+  PERSONAL_BRANCH_NAME: Alphrag-local-release
 
 jobs:
   check_updates:
@@ -183,20 +187,22 @@ jobs:
           max_attempts: 3
           retry_on: error
       - name: Package recipes
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !contains(github.event.inputs.message, '[no-recipes]')) }}
         run: pnpm i && pnpm lint && pnpm reformat-files && pnpm package
         working-directory: ./recipes
       - name: Run linter and tests
         run: pnpm lint && pnpm test
-      - name: Build Ferdium without publish for any branch not 'nightly' and not 'release'
-        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' }}
+      - name: Build Ferdium without publish for any branch not 'nightly' and not 'release' and not the personal one
+        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != env.PERSONAL_BRANCH_NAME }}
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
         run: pnpm build --publish never
         shell: bash
       - name: "Build Ferdium with publish for '${{ env.GIT_BRANCH_NAME }}' branch"
-        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' }}
+        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' || env.GIT_BRANCH_NAME == env.PERSONAL_BRANCH_NAME }}
         env:
           GH_TOKEN: ${{ secrets.FERDIUM_PUBLISH_TOKEN }}
+          # CHANGE: If a signing certificate is not used, the variable CSC_IDENTITY_AUTO_DISCOVERY needs to be set to false and the lines below commented
           CSC_IDENTITY_AUTO_DISCOVERY: true
           APPLEID: ${{ secrets.APPLEID }}
           APPLEID_PASSWORD: ${{ secrets.APPLEID_PASSWORD }}
@@ -280,26 +286,25 @@ jobs:
           fi
         shell: bash
       - name: Package recipes
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !contains(github.event.inputs.message, '[no-recipes]')) }}
         run: pnpm i && pnpm lint && pnpm reformat-files && pnpm package
         working-directory: ./recipes
       - name: Run linter and tests
         run: pnpm lint && pnpm test
-      - name: Build Ferdium without publish for any branch not 'nightly' and not 'release'
-        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' }}
+      - name: Build Ferdium without publish for any branch not 'nightly' and not 'release' and not the personal one
+        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != env.PERSONAL_BRANCH_NAME }}
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
         run: pnpm build --publish never
         shell: bash
+      # CHANGE: SNAP DISABLED
       - name: "Build Ferdium with publish for '${{ env.GIT_BRANCH_NAME }}' branch"
-        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' }}
+        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' || env.GIT_BRANCH_NAME == env.PERSONAL_BRANCH_NAME}}
         env:
           GH_TOKEN: ${{ secrets.FERDIUM_PUBLISH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_LOGIN }} # Note: Login no longer required https://forum.snapcraft.io/t/snapcraft-authentication-options/30473/21
         run: |
-          sudo snap install snapcraft --channel=7.x/stable --classic
-          pnpm build --publish always -c.snap.publish.repo=$SNAP_PUBLISH_REPO -c.snap.publish.channels=$SNAP_PUBLISH_CHANNEL
-          snapcraft logout
+          pnpm build --publish always
         shell: bash
 
   build_windows:
@@ -368,20 +373,21 @@ jobs:
           max_attempts: 3
           retry_on: error
       - name: Package recipes
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !contains(github.event.inputs.message, '[no-recipes]')) }}
         run: pnpm i && pnpm lint && pnpm reformat-files && pnpm package
         working-directory: ./recipes
         shell: bash
       - name: Run linter and tests
         run: pnpm lint && pnpm test
         shell: bash
-      - name: Build Ferdium without publish for any branch not 'nightly' and not 'release'
-        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' }}
+      - name: Build Ferdium without publish for any branch not 'nightly' and not 'release' and not the personal one
+        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != env.PERSONAL_BRANCH_NAME }}
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
         run: pnpm build --publish never
         shell: bash
       - name: "Build Ferdium with publish for '${{ env.GIT_BRANCH_NAME }}' branch"
-        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' }}
+        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' || env.GIT_BRANCH_NAME == env.PERSONAL_BRANCH_NAME }}
         env:
           GH_TOKEN: ${{ secrets.FERDIUM_PUBLISH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false

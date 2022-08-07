@@ -2,20 +2,10 @@ directories:
   app: ./build
   output: ./out
 
-appId: "org.ferdium.ferdium-app"
+appId: "org.alphrag.ferdium-app"
 
 publish:
   provider: github
-
-snap:
-  base: core22
-  plugs: ["default", "camera", "audio-record", "removable-media"]
-  allowNativeWayland: true
-  executableArgs: ["$(sh -c '[ \"$(snapctl get wayland-native)\" != \"false\" ] && echo --ozone-platform-hint=auto || true')"]
-  hooks: ./build-helpers/snap-hooks
-  publish:
-    provider: snapStore
-  description: 'Ferdium is your cross-platform messaging app / former heir to the throne of Austria-Hungary which brings your chat & messaging services together into one application. For enabling webcam access you need to connect "camera" plug to snap, and for microphone with PulseAudio the "audio-record" plug. This can be done in Snap GUI or via command: `snap connect ferdium:camera; snap connect ferdium:audio-record`.'
 
 nsis:
   perMachine: false
@@ -53,8 +43,8 @@ rpm:
 afterSign: ./build-helpers/notarize.js
 
 protocols:
-  name: Ferdium
-  schemes: [ferdium]
+  name: Ferdium-Alphrag
+  schemes: [ferdium-alphrag]
 
 asarUnpack:
   - ./recipes
@@ -97,7 +87,7 @@ win:
 linux:
   icon: ./build-helpers/images/icons
   category: Network;InstantMessaging;
-  executableName: ferdium
+  executableName: ferdium-alphrag
   synopsis: "Messaging app for WhatsApp, Slack, Telegram, Gmail, Google Chat, and many more."
   # Note: Please keep the description as a single-line string, as this will become the Comment in the ferdium.desktop Linux launcher file, which requires a single line.
   description: 'Desktop app bringing all your messaging services into one installable'
@@ -110,4 +100,3 @@ linux:
     - target: rpm
       arch: [x64, arm64]
     - target: freebsd
-    - target: snap
