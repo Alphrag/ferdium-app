@@ -3,6 +3,8 @@
 # Note: This requires a personal gh token to be setup as a secret named 'FERDIUM_WINGET_PAT'
 # TODO: refactor the jobs process in order to do the parsing of the json only in one place.
 
+# CHANGE: This does a dry-run of the update but doesn't submit it
+
 name: Update Ferdium package on winget
 
 on:
@@ -15,7 +17,8 @@ on:
     types: [published]
 
 env:
-  REPO_URL: https://api.github.com/repos/ferdium/ferdium-app/releases
+  # CHANGE: Set you own repo url
+  REPO_URL: https://api.github.com/repos/alphrag/ferdium-app/releases
 
 jobs:
   manual_winget_update:
@@ -91,7 +94,8 @@ jobs:
 
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
 
-          $command = ".\wingetcreate.exe update $package -v '${{ env.last_version }}' -u $installerUrls -t $ghToken -o .\ -s"
+          # CHANGE: Set local output (`-o`) and remove submission (`-s`)
+          $command = ".\wingetcreate.exe update $package -v '${{ env.last_version }}' -u $installerUrls -t $ghToken -o .\"
           Write-Host $command
           Invoke-Expression $command
 
@@ -134,6 +138,21 @@ jobs:
           $package = '${{ env.PACKAGE_NAME }}'
           $ghToken = '${{ secrets.FERDIUM_WINGET_PAT }}'
 
-          $command = ".\wingetcreate.exe update $package -v $($version.Trim('v')) -u $installerUrls -t $ghToken -o .\ -s"
+          # CHANGE: Set local output (`-o`) and remove submission (`-s`)
+          $command = ".\wingetcreate.exe update $package -v $($version.Trim('v')) -u $installerUrls -t $ghToken -o .\"
           Write-Host $command
           Invoke-Expression $command
+
+# CHANGE: Personal test using jq on unix for dealing with release api instead of windows powershell
+  test_bash:
+    name: "Test parsing using jq on bash instead of pws"
+    if: ${{ github.event_name == 'workflow_dispatch' && contains(github.event.inputs.message, '[jq]') }}
+    runs-on: windows-latest
+    steps:
+      - name: Get info url
+        run: |
+          RELEASE=$(curl https://api.github.com/repos/ferdium/ferdium-app/releases | jq -r '.[1]')
+          echo "$RELEASE" | jq '.assets[] | {name: .name, url: .browser_download_url} | select(.name |endswith("-x64.msi") or endswith("-ia32.msi") or (startswith("Ferdium-win-AutoSetup") and endswith(".exe")))'
+          SETUP= echo "$RELEASE" | jq '.assets[] | select(.name | test("Ferdium-win-AutoSetup*") and endswith(".exe")) | .browser_download_url'
+        # etc
+        shell: bash

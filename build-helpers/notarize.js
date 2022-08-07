@@ -16,7 +16,7 @@ exports.default = async function notarizing(context) {
 
   await notarize({
     tool: 'notarytool',
-    appBundleId: 'org.ferdium.ferdium-app',
+    appBundleId: 'org.alphrag.ferdium-app',
     appPath: `${appOutDir}/${appName}.app`,
     teamId: '55E9FPJ93P',
     appleId: process.env.APPLEID,
