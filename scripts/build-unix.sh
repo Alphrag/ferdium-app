@@ -74,6 +74,9 @@ else
   git clean -fxd            # Note: This will blast away the 'recipes' folder if you have symlinked it
 fi
 
+if [ "$CLEAN_ONLY" == "true" ]; then
+  exit 0;
+fi
 # -----------------------------------------------------------------------------
 # Ensure that the system dependencies are at the correct version - fail if not
 
