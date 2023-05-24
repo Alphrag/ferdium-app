@@ -6,6 +6,7 @@ import InfoBar from './ui/InfoBar';
 import Icon from './ui/icon';
 
 import { onAuthGoToReleaseNotes } from '../helpers/update-helpers';
+import { isWinPortable } from '../environment';
 
 const messages = defineMessages({
   updateAvailable: {
@@ -20,6 +21,10 @@ const messages = defineMessages({
     id: 'infobar.buttonInstallUpdate',
     defaultMessage: 'Restart & install update',
   },
+  buttonOpenDownloadPage: {
+    id: 'infobar.buttonOpenDownloadPage',
+    defaultMessage: 'Go to download page',
+  },
 });
 
 export interface IProps {
@@ -31,11 +36,16 @@ export interface IProps {
 const AppUpdateInfoBar = (props: IProps) => {
   const { onInstallUpdate, updateVersionParsed, onHide } = props;
   const intl = useIntl();
+  const buttonText = intl.formatMessage(
+    isWinPortable
+      ? messages.buttonOpenDownloadPage
+      : messages.buttonInstallUpdate,
+  );
 
   return (
     <InfoBar
       type="primary"
-      ctaLabel={intl.formatMessage(messages.buttonInstallUpdate)}
+      ctaLabel={buttonText}
       onClick={onInstallUpdate}
       onHide={onHide}
     >

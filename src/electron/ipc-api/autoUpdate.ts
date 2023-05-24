@@ -1,13 +1,19 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, app } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import { appEvents } from '../..';
+import { isWinPortable } from '../../environment';
+import { openExternalUrl } from '../../helpers/url-helpers';
+import { GITHUB_FERDIUM_URL } from '../../config';
 
 const debug = require('../../preload-safe-debug')('Ferdium:ipcApi:autoUpdate');
 
 export default (params: { mainWindow: BrowserWindow; settings: any }) => {
   const enableUpdate = Boolean(params.settings.app.get('automaticUpdates'));
 
-  if (!enableUpdate) {
+  // remove after getting out of dev mode
+  autoUpdater.forceDevUpdateConfig = true;
+
+  if (!enableUpdate || isWinPortable) {
     autoUpdater.autoInstallOnAppQuit = false;
     autoUpdater.autoDownload = false;
   } else {
@@ -22,6 +28,12 @@ export default (params: { mainWindow: BrowserWindow; settings: any }) => {
           if (args.action === 'check') {
             debug('checking for update');
             autoUpdater.checkForUpdates();
+            // } else if (args.action === 'openRelease') {
+            //   const updateVersion = app.updateVersion;
+            //   openExternalUrl(
+            //     `${GITHUB_FERDIUM_URL}/ferdium-app/releases/${updateVersion}`,
+            //     true,
+            //   );
           } else if (args.action === 'install') {
             debug('installing update');
 
@@ -51,6 +63,10 @@ export default (params: { mainWindow: BrowserWindow; settings: any }) => {
           version: event.version,
           available: true,
         });
+        if (isWinPortable)
+          params.mainWindow.webContents.send('autoUpdate', {
+            downloaded: true,
+          });
       }
     });
 

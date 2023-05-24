@@ -134,6 +134,7 @@ $EXPECTED_PNPM_VERSION = (Get-Content package.json | ConvertFrom-Json).engines.p
 $ACTUAL_PNPM_VERSION = pnpm --version -ErrorAction SilentlyContinue  # in case the pnpm executable itself is not present
 if ($ACTUAL_PNPM_VERSION -ne $EXPECTED_PNPM_VERSION) {
   npm i -gf pnpm@$EXPECTED_PNPM_VERSION
+  $ACTUAL_PNPM_VERSION = pnpm --version
 }
 
 # Check pnpm version of the recipes submodule
@@ -142,7 +143,7 @@ if ($ACTUAL_PNPM_VERSION -ne $EXPECTED_RECIPES_PNPM_VERSION) {
  fail_with_docs "The expected versions of pnpm are not the same in the main repo and in the recipes submodule, please sync them.
     expected in recipes  : [$EXPECTED_RECIPES_PNPM_VERSION]
     expected in main repo: [$EXPECTED_PNPM_VERSION]
-    actual               : [$EXPECTED_PNPM_VERSION]"
+    actual               : [$ACTUAL_PNPM_VERSION]"
 }
 
 # -----------------------------------------------------------------------------

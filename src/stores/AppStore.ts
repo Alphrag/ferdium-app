@@ -440,7 +440,7 @@ export default class AppStore extends TypedStore {
   @action _installUpdate() {
     debug('_installUpdate: sending event to autoUpdate:install');
     ipcRenderer.send('autoUpdate', {
-      action: 'install',
+      action: isWinPortable ? 'openRelease' : 'install',
     });
   }
 
