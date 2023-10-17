@@ -224,16 +224,13 @@
       "source-map-url": "0.4.1",
       "resolve-url": "0.2.1",
       "urix": "0.1.0"
-    },
-    "patchedDependencies": {
-      "macos-notification-state@3.0.0": "patches/macos-notification-state@3.0.0.patch"
     }
   },
   "overrides": {
     "usocket": "_EXCLUDED_"
   },
   "optionalDependencies": {
-    "macos-notification-state": "3.0.0",
+    "macos-notification-state": "github:ferdium/macos-notification-state#130bb2602795b65ae2dea74d823027b185eaf0ae",
     "node-mac-permissions": "2.3.0"
   },
   "browserslist": [

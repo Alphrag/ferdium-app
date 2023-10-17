@@ -7,11 +7,6 @@ settings:
 overrides:
   usocket: _EXCLUDED_
 
-patchedDependencies:
-  macos-notification-state@3.0.0:
-    hash: kuej7zl6z4bumojhgwpcmdz3ja
-    path: patches/macos-notification-state@3.0.0.patch
-
 dependencies:
   '@adonisjs/ace':
     specifier: 5.1.0
@@ -268,8 +263,8 @@ dependencies:
 
 optionalDependencies:
   macos-notification-state:
-    specifier: 3.0.0
-    version: 3.0.0(patch_hash=kuej7zl6z4bumojhgwpcmdz3ja)
+    specifier: github:ferdium/macos-notification-state#130bb2602795b65ae2dea74d823027b185eaf0ae
+    version: github.com/ferdium/macos-notification-state/130bb2602795b65ae2dea74d823027b185eaf0ae
   node-mac-permissions:
     specifier: 2.3.0
     version: 2.3.0
@@ -9340,16 +9335,6 @@ packages:
     resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
     dev: false
 
-  /macos-notification-state@3.0.0(patch_hash=kuej7zl6z4bumojhgwpcmdz3ja):
-    resolution: {integrity: sha512-tvFDZajIcwIsYg1WQAXGtrJFljlL1PEOK2cCoPDrN//XxIwTiVNvaXznxLjV4mYkyXctIDVs0ujGdrbGzeOY/w==}
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      node-addon-api: 3.0.0
-    dev: false
-    optional: true
-    patched: true
-
   /macos-release@2.5.0:
     resolution: {integrity: sha512-EIgv+QZ9r+814gjJj0Bt5vSLJLzswGmSUbUpbi9AIr/fsN2IWFBl2NucV9PAiek+U1STK468tEkxmVYUtuAN3g==}
     engines: {node: '>=6'}
@@ -9877,12 +9862,6 @@ packages:
     resolution: {integrity: sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==}
     requiresBuild: true
     dev: true
-    optional: true
-
-  /node-addon-api@3.0.0:
-    resolution: {integrity: sha512-sSHCgWfJ+Lui/u+0msF3oyCgvdkhxDbkCS6Q8uiJquzOimkJBvX6hl5aSSA7DR1XbMpdM8r7phjcF63sF4rkKg==}
-    requiresBuild: true
-    dev: false
     optional: true
 
   /node-addon-api@3.2.1:
@@ -13531,3 +13510,13 @@ packages:
       mustache: 4.2.0
       stack-trace: 0.0.10
     dev: false
+
+  github.com/ferdium/macos-notification-state/130bb2602795b65ae2dea74d823027b185eaf0ae:
+    resolution: {tarball: https://codeload.github.com/ferdium/macos-notification-state/tar.gz/130bb2602795b65ae2dea74d823027b185eaf0ae}
+    name: macos-notification-state
+    version: 2.0.2
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+    dev: false
+    optional: true
