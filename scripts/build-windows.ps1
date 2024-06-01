@@ -11,6 +11,7 @@ $env:ELECTRON_CACHE = "$USERHOME\.cache\electron"
 $env:ELECTRON_BUILDER_CACHE = "$USERHOME\.cache\electron-builder"
 $env:CSC_IDENTITY_AUTO_DISCOVERY = $false
 $env:CI = $true
+$env:SKIP_RECIPE = $true
 
 # -----------------------------------------------------------------------------
 #                  Utility functions
@@ -134,6 +135,7 @@ $EXPECTED_PNPM_VERSION = (Get-Content package.json | ConvertFrom-Json).engines.p
 $ACTUAL_PNPM_VERSION = pnpm --version 2>$null  # in case the pnpm executable itself is not present
 if ($ACTUAL_PNPM_VERSION -ne $EXPECTED_PNPM_VERSION) {
   npm i -gf pnpm@$EXPECTED_PNPM_VERSION
+  $ACTUAL_PNPM_VERSION = pnpm --version
 }
 
 # Check pnpm version of the recipes submodule
@@ -147,12 +149,18 @@ if ($ACTUAL_PNPM_VERSION -ne $EXPECTED_RECIPES_PNPM_VERSION) {
 
 # -----------------------------------------------------------------------------
 Write-Host "*************** Building recipes ***************"
+if ($env:SKIP_RECIPE -eq "true") {
+  Write-Host "Skipping recipes"
+}
+else
+{
 Push-Location recipes
 pnpm i
 pnpm lint
 pnpm reformat-files
 pnpm package
 Pop-Location
+}
 
 # -----------------------------------------------------------------------------
 # Now the meat.....
