@@ -35,6 +35,7 @@ env:
   # DEBUG: electron-builder
   # CHANGE: Set name to use for personal branch
   PERSONAL_BRANCH_NAME: Alphrag-local-release
+  DEPRECATED_WINDOWS_BRANCH: warning-win7-build
 
 jobs:
   check_updates:
@@ -381,13 +382,13 @@ jobs:
         run: pnpm lint && pnpm test
         shell: bash
       - name: Build Ferdium without publish for any branch not 'nightly' and not 'release' and not the personal one
-        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != env.PERSONAL_BRANCH_NAME }}
+        if: ${{ env.GIT_BRANCH_NAME != 'nightly' && env.GIT_BRANCH_NAME != 'release' && env.GIT_BRANCH_NAME != env.PERSONAL_BRANCH_NAME && env.GIT_BRANCH_NAME != env.DEPRECATED_WINDOWS_BRANCH }}
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
         run: pnpm build --publish never
         shell: bash
       - name: "Build Ferdium with publish for '${{ env.GIT_BRANCH_NAME }}' branch"
-        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' || env.GIT_BRANCH_NAME == env.PERSONAL_BRANCH_NAME }}
+        if: ${{ env.GIT_BRANCH_NAME == 'nightly' || env.GIT_BRANCH_NAME == 'release' || env.GIT_BRANCH_NAME == env.PERSONAL_BRANCH_NAME || env.GIT_BRANCH_NAME == env.DEPRECATED_WINDOWS_BRANCH }}
         env:
           GH_TOKEN: ${{ secrets.FERDIUM_PUBLISH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
