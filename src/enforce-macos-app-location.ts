@@ -13,14 +13,20 @@ export default function enforceMacOSAppLocation(): void {
     type: 'error',
     message: 'Move to Applications folder?',
     detail:
-      'Ferdium must live in the Applications folder to be able to run correctly.',
+      'Ferdium should live in the Applications folder to be able to run correctly.',
     buttons: ['Move to Applications folder', 'Quit Ferdium'],
     defaultId: 0,
     cancelId: 1,
   });
 
   if (clickedButtonIndex === 1) {
-    api.app.quit();
+    // api.app.quit();
+    api.dialog.showMessageBoxSync({
+      type: 'warning',
+      message:
+        'Running Ferdium outside of the Application folder should be avoided, and is not supported. Do this at your own risks.',
+      buttons: ['I understand'],
+    });
     return;
   }
 
