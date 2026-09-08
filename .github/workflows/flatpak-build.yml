@@ -93,7 +93,7 @@ jobs:
             libarchive-tools
       - name: Install flatpak runtime
         run: |
-          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           flatpak install -u -y org.electronjs.Electron2.BaseApp//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk//25.08
       - name: Build Ferdium without publish for any branch not 'nightly' and not 'release' and not the personal one
         if: ${{ !contains(github.event.inputs.message, '[publish]') }}
