@@ -59,6 +59,32 @@ rpm:
   # Prevent creation of symlinks in /usr/lib/.build_id to avoid conflicts with other electron-based app having the symlink to chrome-sandbox
   fpm: ["--rpm-rpmbuild-define=_build_id_links none"]
 
+
+flatpak:
+  runtime: org.freedesktop.Platform         # freedesktop (most common for Electron)
+  runtimeVersion: "25.08"                   # runtime version
+  sdk: org.freedesktop.Sdk
+  base: org.electronjs.Electron2.BaseApp
+  baseVersion: "25.08"
+  branch: ferdium-test
+  useWaylandFlags: true   # Appends --enable-features=UseOzonePlatform --ozone-platform=wayland when running under a Wayland session
+  finishArgs:
+    - "--socket=x11"
+    - "--socket=wayland"
+    - "--share=ipc"
+    - "--socket=pulseaudio"
+    - "--share=network"
+    - "--device=all"
+    - "--filesystem=home:ro"
+    - "--filesystem=xdg-download"
+    - "--filesystem=/run/.heim_org.h5l.kcm-socket"
+    # For correct cursor scaling under Wayland
+    - "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons"
+    - "--talk-name=org.freedesktop.Notifications"
+    - "--talk-name=org.kde.StatusNotifierWatcher"
+    - "--talk-name=com.canonical.AppMenu.Registrar"
+    - "--own-name=org.mpris.MediaPlayer2.chromium.*"
+
 # This is the notarization process which allows the app to be opened after download with the minimal warning.
 afterSign: ./build-helpers/notarize.js
 
