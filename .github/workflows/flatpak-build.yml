@@ -12,7 +12,7 @@ on:
 
 env:
   USE_HARD_LINKS: false
-  # DEBUG: @malept/flatpak-bundler
+  DEBUG: "@malept/flatpak-bundler"
   # CHANGE: Set name to use for personal branch
   PERSONAL_BRANCH_NAME: Alphrag-local-release
   FLATPAK_BRANCH: test-flatpak
